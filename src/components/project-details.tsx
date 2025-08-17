@@ -148,7 +148,12 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                   {finishedMilestones.map((milestone) => (
                     <AccordionItem key={milestone.id} value={milestone.id}>
                       <AccordionTrigger className="font-semibold no-underline hover:no-underline">
-                        {milestone.title}
+                        <div className="flex justify-between w-full pr-2">
+                           <span>{milestone.title}</span>
+                           <span className="text-sm text-muted-foreground font-normal">
+                             Completed on {format(new Date(milestone.dueDate), "MMM d, yyyy")}
+                           </span>
+                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground space-y-2">
                         {milestone.notes ? (
