@@ -7,11 +7,14 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Project } from "@/lib/data";
 
-export default function ProjectPage({ params: { id } }: { params: { id: string } }) {
+export default function ProjectPage({ params }: { params: { id: string } }) {
   const [project, setProject] = useState<Project | null>(null);
+  const id = params.id;
 
   useEffect(() => {
-    getProjectById(id).then(setProject);
+    if (id) {
+      getProjectById(id).then(setProject);
+    }
   }, [id]);
 
   useEffect(() => {
