@@ -49,25 +49,29 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
       root.classList.remove(...themes.map((t) => t.name));
       root.classList.add(selectedTheme.name);
 
-      const applyThemeVariables = (themeVars: Record<string, string>, isDark: boolean) => {
-        const selector = isDark ? ".dark" : ":root";
-        let styleSheet = document.getElementById("dynamic-theme-styles");
-        if (!styleSheet) {
-          styleSheet = document.createElement("style");
-          styleSheet.id = "dynamic-theme-styles";
-          document.head.appendChild(styleSheet);
-        }
-        
-        const css = `
-          ${selector} {
-            ${Object.entries(themeVars).map(([key, value]) => `--${key}: ${value};`).join('\n')}
-          }
-        `;
-        styleSheet.innerHTML = css;
-      };
+      let styleSheet = document.getElementById("dynamic-theme-styles");
+      if (!styleSheet) {
+        styleSheet = document.createElement("style");
+        styleSheet.id = "dynamic-theme-styles";
+        document.head.appendChild(styleSheet);
+      }
+
+      const lightVars = Object.entries(selectedTheme.cssVars.light)
+        .map(([key, value]) => `--${key}: ${value};`)
+        .join('\n');
       
-      applyThemeVariables(selectedTheme.cssVars.light, false);
-      applyThemeVariables(selectedTheme.cssVars.dark, true);
+      const darkVars = Object.entries(selectedTheme.cssVars.dark)
+        .map(([key, value]) => `--${key}: ${value};`)
+        .join('\n');
+
+      styleSheet.innerHTML = `
+        :root {
+          ${lightVars}
+        }
+        .dark {
+          ${darkVars}
+        }
+      `;
     }
   }, [settings, isMounted]);
 
