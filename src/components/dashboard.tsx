@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { format } from "date-fns";
 import { ArrowRight, PlusCircle } from "lucide-react";
 import type { Project } from "@/lib/data";
 
@@ -42,7 +41,6 @@ export function Dashboard({ projects }: DashboardProps) {
           <Card key={project.id} className="flex flex-col hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="text-xl">{project.name}</CardTitle>
-              <CardDescription>{project.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow space-y-4">
               <div>
@@ -54,10 +52,6 @@ export function Dashboard({ projects }: DashboardProps) {
                 </div>
                 <Progress value={project.progress} aria-label={`${project.progress}% complete`} />
               </div>
-              <div className="flex justify-between items-center text-sm text-muted-foreground">
-                <span>Due Date</span>
-                <span>{format(new Date(project.dueDate), "MMM d, yyyy")}</span>
-              </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
               <TooltipProvider>
@@ -67,7 +61,7 @@ export function Dashboard({ projects }: DashboardProps) {
                       <TooltipTrigger asChild>
                         <Avatar className="border-2 border-card">
                           <AvatarImage src={member.avatarUrl} alt={member.name} />
-                          <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                          <AvatarFallback>{member.name.charAt(0)}</Fallback>
                         </Avatar>
                       </TooltipTrigger>
                       <TooltipContent>{member.name}</TooltipContent>
