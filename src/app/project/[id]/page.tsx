@@ -7,16 +7,16 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Project } from "@/lib/data";
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
+export default function ProjectPage({ params: { id } }: { params: { id: string } }) {
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    getProjectById(params.id).then(setProject);
-  }, [params.id]);
+    getProjectById(id).then(setProject);
+  }, [id]);
 
   useEffect(() => {
-    if (project === null && params.id) {
-      getProjectById(params.id).then((proj) => {
+    if (project === null && id) {
+      getProjectById(id).then((proj) => {
         if (!proj) {
           // notFound() can't be called in useEffect, so handle appropriately
           console.error("Project not found");
@@ -25,7 +25,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         }
       });
     }
-  }, [params.id, project]);
+  }, [id, project]);
   
   if (!project) {
     // This will be called on first render, and until the project is loaded.
