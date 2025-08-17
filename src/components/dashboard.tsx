@@ -46,7 +46,7 @@ export function Dashboard({ projects }: DashboardProps) {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
-              <div className="text-sm text-muted-foreground truncate" title={project.team.map(m => m.name).join(', ')}>
+              <div className="text-sm text-muted-foreground" title={project.team.map(m => m.name).join(', ')}>
                 {project.team.map(m => m.name).join(', ')}
               </div>
               <Button asChild variant="ghost" size="sm">
