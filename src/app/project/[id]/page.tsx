@@ -1,13 +1,36 @@
+
+"use client";
 import { getProjectById } from "@/lib/data";
 import { MainLayout } from "@/components/main-layout";
 import { ProjectDetails } from "@/components/project-details";
 import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { Project } from "@/lib/data";
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
-  const project = await getProjectById(params.id);
+export default function ProjectPage({ params }: { params: { id: string } }) {
+  const [project, setProject] = useState<Project | null>(null);
 
+  useEffect(() => {
+    getProjectById(params.id).then(setProject);
+  }, [params.id]);
+
+  useEffect(() => {
+    if (project === null && params.id) {
+      getProjectById(params.id).then((proj) => {
+        if (!proj) {
+          // notFound() can't be called in useEffect, so handle appropriately
+          console.error("Project not found");
+        } else {
+          setProject(proj);
+        }
+      });
+    }
+  }, [params.id, project]);
+  
   if (!project) {
-    notFound();
+    // This will be called on first render, and until the project is loaded.
+    // You could show a loading skeleton here.
+    return <div>Loading...</div>;
   }
 
   return (

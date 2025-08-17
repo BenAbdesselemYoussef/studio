@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -21,18 +22,20 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { useSettings } from "@/hooks/use-settings.tsx";
 
 function HeaderNav() {
   const pathname = usePathname();
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/" || pathname.startsWith("/project");
+    if (path === "/settings") return pathname === "/settings";
     return pathname.startsWith(path);
   }
 
   const navItems = [
     { href: "/", icon: <LayoutGrid />, label: "Dashboard" },
     { href: "/team", icon: <Users />, label: "Team" },
-    { href: "#", icon: <Settings />, label: "Settings" },
+    { href: "/settings", icon: <Settings />, label: "Settings" },
   ];
 
   return (
@@ -78,20 +81,23 @@ function HeaderContent() {
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { settings } = useSettings();
+  
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/" || pathname.startsWith("/project");
+    if (path === "/settings") return pathname === "/settings";
     return pathname.startsWith(path);
   }
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={settings.defaultNav === 'sidebar'}>
       <div className="flex min-h-screen w-full bg-background">
         <Sidebar>
           <SidebarHeader>
             <div className="flex items-center gap-2 overflow-hidden">
               <Link href="/" className="flex items-center gap-2">
                 <FolderKanban className="h-6 w-6 text-primary" />
-                <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+                <h1 className="text-xl font-semibold text-foreground whitespace-nowrap">MashrooBrika</h1>
               </Link>
             </div>
           </SidebarHeader>
@@ -127,7 +133,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                   variant={isActive("/settings") ? "secondary" : "ghost"}
                   isActive={isActive("/settings")}
                 >
-                  <Link href="#">
+                  <Link href="/settings">
                     <Settings />
                     <span>Settings</span>
                   </Link>
