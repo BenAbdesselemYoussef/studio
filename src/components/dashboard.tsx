@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowRight, PlusCircle } from "lucide-react";
 import type { Project } from "@/lib/data";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,12 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface DashboardProps {
   projects: Project[];
@@ -53,21 +46,9 @@ export function Dashboard({ projects }: DashboardProps) {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
-              <TooltipProvider>
-                <div className="flex -space-x-2">
-                  {project.team.map((member) => (
-                    <Tooltip key={member.id}>
-                      <TooltipTrigger asChild>
-                        <Avatar className="border-2 border-card">
-                          <AvatarImage src={member.avatarUrl} alt={member.name} />
-                          <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                      </TooltipTrigger>
-                      <TooltipContent>{member.name}</TooltipContent>
-                    </Tooltip>
-                  ))}
-                </div>
-              </TooltipProvider>
+              <div className="text-sm text-muted-foreground truncate" title={project.team.map(m => m.name).join(', ')}>
+                {project.team.map(m => m.name).join(', ')}
+              </div>
               <Button asChild variant="ghost" size="sm">
                 <Link href={`/project/${project.id}`}>
                   View Project
