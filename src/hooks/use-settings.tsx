@@ -2,7 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { themes, Theme } from "@/lib/themes";
+import { themes } from "@/lib/themes";
 
 type Settings = {
   theme: string;
@@ -30,7 +30,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const storedSettings = localStorage.getItem("app-settings");
     if (storedSettings) {
-      setSettings(JSON.parse(storedSettings));
+      try {
+        setSettings(JSON.parse(storedSettings));
+      } catch (e) {
+        console.error("Failed to parse settings from localStorage", e);
+      }
     }
     setIsMounted(true);
   }, []);
@@ -45,22 +49,25 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
       root.classList.remove(...themes.map((t) => t.name));
       root.classList.add(selectedTheme.name);
 
-      const themeCss = selectedTheme.cssVars.light;
-      for (const [key, value] of Object.entries(themeCss)) {
-        root.style.setProperty(`--${key}`, value);
-      }
-      const darkThemeCss = selectedTheme.cssVars.dark;
-      const darkRoot = window.document.querySelector('.dark');
-      if (darkRoot) {
-          for (const [key, value] of Object.entries(darkThemeCss)) {
-              (darkRoot as HTMLElement).style.setProperty(`--${key}`, value);
+      const applyThemeVariables = (themeVars: Record<string, string>, isDark: boolean) => {
+        const selector = isDark ? ".dark" : ":root";
+        let styleSheet = document.getElementById("dynamic-theme-styles");
+        if (!styleSheet) {
+          styleSheet = document.createElement("style");
+          styleSheet.id = "dynamic-theme-styles";
+          document.head.appendChild(styleSheet);
+        }
+        
+        const css = `
+          ${selector} {
+            ${Object.entries(themeVars).map(([key, value]) => `--${key}: ${value};`).join('\n')}
           }
-      } else {
-          // apply to root and assume dark class is present
-            for (const [key, value] of Object.entries(darkThemeCss)) {
-              root.style.setProperty(`--${key}`, value);
-          }
-      }
+        `;
+        styleSheet.innerHTML = css;
+      };
+      
+      applyThemeVariables(selectedTheme.cssVars.light, false);
+      applyThemeVariables(selectedTheme.cssVars.dark, true);
     }
   }, [settings, isMounted]);
 
