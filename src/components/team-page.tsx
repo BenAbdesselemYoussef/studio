@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, MoreVertical, Edit, Trash2 } from "lucide-react";
 import type { Member } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,23 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
@@ -29,9 +46,16 @@ interface TeamPageProps {
 
 export function TeamPage({ members: initialMembers }: TeamPageProps) {
   const [members, setMembers] = useState<Member[]>(initialMembers);
+  const [isAddMemberDialogOpen, setIsAddMemberDialogOpen] = useState(false);
+  const [isEditMemberDialogOpen, setIsEditMemberDialogOpen] = useState(false);
+  const [memberToEdit, setMemberToEdit] = useState<Member | null>(null);
+  const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
+
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberRole, setNewMemberRole] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editedMemberName, setEditedMemberName] = useState("");
+  const [editedMemberRole, setEditedMemberRole] = useState("");
+
   const { toast } = useToast();
 
   const getPravatarUrl = (id: string) => `https://i.pravatar.cc/150?u=${id}`;
@@ -57,7 +81,7 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
     setMembers([...members, newMember]);
     setNewMemberName("");
     setNewMemberRole("");
-    setIsDialogOpen(false);
+    setIsAddMemberDialogOpen(false);
 
     toast({
       title: "Member Added",
@@ -65,11 +89,57 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
     });
   };
 
+  const handleOpenEditDialog = (member: Member) => {
+    setMemberToEdit(member);
+    setEditedMemberName(member.name);
+    setEditedMemberRole(member.role);
+    setIsEditMemberDialogOpen(true);
+  };
+
+  const handleEditMember = () => {
+    if (!memberToEdit || !editedMemberName.trim() || !editedMemberRole.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill out all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setMembers(
+      members.map((m) =>
+        m.id === memberToEdit.id
+          ? { ...m, name: editedMemberName, role: editedMemberRole }
+          : m
+      )
+    );
+
+    setIsEditMemberDialogOpen(false);
+    setMemberToEdit(null);
+
+    toast({
+      title: "Member Updated",
+      description: `Details for ${editedMemberName} have been updated.`,
+    });
+  };
+
+  const handleDeleteMember = () => {
+    if (!memberToDelete) return;
+
+    setMembers(members.filter((m) => m.id !== memberToDelete.id));
+    setMemberToDelete(null);
+
+    toast({
+      title: "Member Removed",
+      description: `${memberToDelete.name} has been removed from the team.`,
+    });
+  };
+
   return (
     <div className="animate-in fade-in-50">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Team Members</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isAddMemberDialogOpen} onOpenChange={setIsAddMemberDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" />
@@ -118,9 +188,35 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
           </DialogContent>
         </Dialog>
       </div>
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {members.map((member) => (
-          <Card key={member.id} className="text-center hover:shadow-lg transition-shadow duration-300">
+          <Card key={member.id} className="text-center hover:shadow-lg transition-shadow duration-300 relative">
+            <div className="absolute top-2 right-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleOpenEditDialog(member)}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    <span>Edit</span>
+                  </DropdownMenuItem>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      onClick={() => setMemberToDelete(member)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <CardContent className="p-6 flex flex-col items-center">
               <Avatar className="h-24 w-24 mx-auto mb-4">
                 <AvatarImage src={member.avatarUrl} alt={member.name} />
@@ -132,6 +228,65 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
           </Card>
         ))}
       </div>
+
+      {/* Edit Member Dialog */}
+      <Dialog open={isEditMemberDialogOpen} onOpenChange={setIsEditMemberDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Team Member</DialogTitle>
+            <DialogDescription>
+              Update the details for {memberToEdit?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="edit-name"
+                value={editedMemberName}
+                onChange={(e) => setEditedMemberName(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-role" className="text-right">
+                Role
+              </Label>
+              <Input
+                id="edit-role"
+                value={editedMemberRole}
+                onChange={(e) => setEditedMemberRole(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditMemberDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleEditMember}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!memberToDelete} onOpenChange={(open) => !open && setMemberToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently remove{" "}
+              <strong>{memberToDelete?.name}</strong> from the team.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setMemberToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteMember} className="bg-destructive hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
