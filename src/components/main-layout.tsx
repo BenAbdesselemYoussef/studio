@@ -23,17 +23,48 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
+function HeaderNav() {
+  const pathname = usePathname();
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/" || pathname.startsWith("/project");
+    return pathname.startsWith(path);
+  }
+
+  const navItems = [
+    { href: "/", icon: <LayoutGrid />, label: "Dashboard" },
+    { href: "/team", icon: <Users />, label: "Team" },
+    { href: "#", icon: <Settings />, label: "Settings" },
+  ];
+
+  return (
+    <nav className="hidden md:flex items-center gap-2">
+      {navItems.map((item) => (
+        <Button
+          key={item.href}
+          asChild
+          variant={isActive(item.href) ? "secondary" : "ghost"}
+          size="sm"
+        >
+          <Link href={item.href}>
+            {item.icon}
+            {item.label}
+          </Link>
+        </Button>
+      ))}
+    </nav>
+  );
+}
+
 function HeaderContent() {
   const { state } = useSidebar();
   return (
     <>
       <SidebarTrigger />
-      {state === 'collapsed' && (
-        <Link href="/" className="flex items-center gap-2 animate-in fade-in-50">
-          <FolderKanban className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
-        </Link>
-      )}
+      <Link href="/" className="flex items-center gap-2">
+        <FolderKanban className="h-6 w-6 text-primary" />
+        <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+      </Link>
+      {state === 'collapsed' && <div className="ml-auto"><HeaderNav /></div>}
     </>
   );
 }
@@ -47,17 +78,15 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen w-full bg-background">
-        <Sidebar collapsible="icon">
+        <Sidebar>
           <SidebarHeader>
             <div className="flex items-center gap-2 overflow-hidden">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/">
-                  <FolderKanban className="h-6 w-6 text-primary" />
-                </Link>
-              </Button>
-              <h1 className="text-xl font-semibold text-foreground group-data-[[data-state=collapsed]]:hidden">MashrooBrika</h1>
+              <Link href="/" className="flex items-center gap-2">
+                <FolderKanban className="h-6 w-6 text-primary" />
+                <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+              </Link>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -66,8 +95,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/")}
-                  tooltip={{ children: "Dashboard" }}
-                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="/">
                     <LayoutGrid />
@@ -79,8 +106,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/team")}
-                  tooltip={{ children: "Team" }}
-                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="/team">
                     <Users />
@@ -92,8 +117,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/settings")}
-                  tooltip={{ children: "Settings" }}
-                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="#">
                     <Settings />
@@ -103,7 +126,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
-          <SidebarRail />
         </Sidebar>
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
