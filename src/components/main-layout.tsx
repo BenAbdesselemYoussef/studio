@@ -17,7 +17,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-  SidebarRail,
   SidebarProvider,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -60,15 +59,16 @@ function HeaderContent() {
   return (
     <>
       <SidebarTrigger />
-      <Link href="/" className="flex items-center gap-2">
-        <FolderKanban className="h-6 w-6 text-primary" />
-        <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
-      </Link>
+      {state === 'collapsed' && (
+        <Link href="/" className="flex items-center gap-2">
+          <FolderKanban className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+        </Link>
+      )}
       {state === 'collapsed' && <div className="ml-auto"><HeaderNav /></div>}
     </>
   );
 }
-
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -78,7 +78,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={false}>
       <div className="flex min-h-screen w-full bg-background">
         <Sidebar>
           <SidebarHeader>
