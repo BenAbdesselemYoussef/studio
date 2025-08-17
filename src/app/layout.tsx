@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Project Zenith',
+  title: 'MashrooBrika',
   description: 'Manage your projects with ease.',
 };
 

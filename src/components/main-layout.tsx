@@ -38,7 +38,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 <FolderKanban className="h-6 w-6 text-primary" />
               </Link>
             </Button>
-            <h1 className="text-xl font-semibold text-foreground">Project Zenith</h1>
+            <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
           </div>
         </SidebarHeader>
         <SidebarContent>
