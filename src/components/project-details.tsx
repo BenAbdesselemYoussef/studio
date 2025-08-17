@@ -15,7 +15,7 @@ import {
   MoreVertical,
   Edit,
 } from "lucide-react";
-import type { Project, Milestone, Asset } from "@/lib/data";
+import { Project, Milestone, Asset } from "@/lib/data";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -116,7 +116,7 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
           ...m,
           progress: finalProgress,
           status: isFinishing ? "Completed" : "In Progress",
-          notes: notes.trim() || (isFinishing ? "Finished" : ""),
+          notes: notes.trim() || (isFinishing ? "Finished" : m.notes),
         };
       }
       return m;
