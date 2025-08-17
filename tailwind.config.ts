@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -13,6 +14,16 @@ export default {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
         code: ['monospace'],
+      },
+      fontSize: {
+        sm: 'var(--text-sm)',
+        base: 'var(--text-sm)', // To handle body font size
+        lg: 'var(--text-lg)',
+        xl: 'var(--text-xl)',
+        '2xl': 'var(--text-2xl)',
+        '3xl': 'var(--text-3xl)',
+        '4xl': '2.25rem', // Not in map, but needed for md/lg mapping
+        '5xl': '3rem', // Not in map, but needed for lg mapping
       },
       colors: {
         background: 'hsl(var(--background))',

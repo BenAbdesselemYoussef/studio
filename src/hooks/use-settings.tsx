@@ -16,6 +16,31 @@ type SettingsContextType = {
   setSettings: (settings: Settings) => void;
 };
 
+const fontSizes: Record<"sm" | "md" | "lg", Record<string, string>> = {
+  sm: {
+    '--text-sm': '0.875rem', // text-sm
+    '--text-lg': '1.125rem', // text-lg
+    '--text-xl': '1.25rem',  // text-xl
+    '--text-2xl': '1.5rem',   // text-2xl
+    '--text-3xl': '1.875rem', // text-3xl
+  },
+  md: {
+    '--text-sm': '1rem',    // text-base (md)
+    '--text-lg': '1.25rem',  // text-xl
+    '--text-xl': '1.5rem',   // text-2xl
+    '--text-2xl': '1.875rem', // text-3xl
+    '--text-3xl': '2.25rem',  // text-4xl
+  },
+  lg: {
+    '--text-sm': '1.125rem', // text-lg
+    '--text-lg': '1.5rem',   // text-2xl
+    '--text-xl': '1.875rem', // text-3xl
+    '--text-2xl': '2.25rem',  // text-4xl
+    '--text-3xl': '3rem',     // text-5xl
+  },
+};
+
+
 const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined
 );
@@ -57,7 +82,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("app-settings", JSON.stringify(settings));
       
       const root = window.document.documentElement;
-      const body = window.document.body;
 
       // Apply color scheme
       root.classList.remove("light", "dark");
@@ -68,18 +92,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         root.classList.add(settings.colorScheme);
       }
       
-      // Apply font size
-      body.classList.remove("text-sm", "text-base", "text-lg");
-      switch (settings.fontSize) {
-        case "sm":
-          body.classList.add("text-sm");
-          break;
-        case "lg":
-          body.classList.add("text-lg");
-          break;
-        default:
-          body.classList.add("text-base");
-      }
+      // Apply font size variables
+      const selectedFontSize = fontSizes[settings.fontSize] || fontSizes.md;
+      Object.entries(selectedFontSize).forEach(([key, value]) => {
+        root.style.setProperty(key, value);
+      });
 
       // Apply theme
       const selectedTheme = themes.find((t) => t.name === settings.theme) || themes[0];

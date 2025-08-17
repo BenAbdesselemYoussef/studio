@@ -24,7 +24,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { useSettings } from "@/hooks/use-settings.tsx";
+import { useSettings } from "@/hooks/use-settings";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 function HeaderNav() {
@@ -119,7 +119,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  variant={isActive("/") ? "secondary" : "ghost"}
+                  variant={isActive("/") ? "default" : "outline"}
                   isActive={isActive("/")}
                 >
                   <Link href="/">
@@ -131,7 +131,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  variant={isActive("/team") ? "secondary" : "ghost"}
+                  variant={isActive("/team") ? "default" : "outline"}
                   isActive={isActive("/team")}
                 >
                   <Link href="/team">
@@ -143,7 +143,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  variant={isActive("/settings") ? "secondary" : "ghost"}
+                  variant={isActive("/settings") ? "default" : "outline"}
                   isActive={isActive("/settings")}
                 >
                   <Link href="/settings">
