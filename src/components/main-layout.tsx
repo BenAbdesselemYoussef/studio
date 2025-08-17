@@ -59,13 +59,19 @@ function HeaderContent() {
   return (
     <>
       <SidebarTrigger />
-      {state === 'collapsed' && (
-        <Link href="/" className="flex items-center gap-2">
-          <FolderKanban className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
-        </Link>
-      )}
-      {state === 'collapsed' && <div className="ml-auto"><HeaderNav /></div>}
+      <div className={`transition-opacity duration-300 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="flex items-center gap-2">
+          {state === 'collapsed' && (
+            <Link href="/" className="flex items-center gap-2">
+              <FolderKanban className="h-6 w-6 text-primary" />
+              <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+            </Link>
+          )}
+        </div>
+      </div>
+      <div className={`ml-auto transition-opacity duration-300 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
+        {state === 'collapsed' && <HeaderNav />}
+      </div>
     </>
   );
 }

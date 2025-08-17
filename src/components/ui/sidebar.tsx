@@ -198,14 +198,12 @@ const Sidebar = React.forwardRef<
       )
     }
 
-    if (state === 'collapsed') {
-      return null;
-    }
-
     return (
       <div
         ref={ref}
-        className={cn("hidden md:block w-[--sidebar-width] border-r text-sidebar-foreground", className)}
+        className={cn("hidden md:block border-r text-sidebar-foreground transition-all duration-300 ease-in-out", 
+                     state === 'collapsed' ? 'w-0' : 'w-[--sidebar-width]',
+                     className)}
         {...props}
       >
         <div
