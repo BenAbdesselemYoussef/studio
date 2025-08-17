@@ -96,10 +96,10 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
     setNotes(milestone.notes || "");
   };
   
-  const handleUpdate = (finish: boolean) => {
+  const handleUpdate = (isFinishing: boolean) => {
     if (!selectedMilestone) return;
 
-    if (finish && !notes.trim()) {
+    if (isFinishing && !notes.trim()) {
       toast({
         title: "Notes required",
         description: "Please provide notes before finishing the milestone.",
@@ -108,15 +108,15 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
       return;
     }
     
-    const finalProgress = finish ? 100 : progress;
+    const finalProgress = isFinishing ? 100 : progress;
 
     const updatedMilestones = project.milestones.map((m) => {
       if (m.id === selectedMilestone.id) {
         return {
           ...m,
           progress: finalProgress,
-          status: finish ? "Completed" : "In Progress",
-          notes: notes.trim() || (finish ? "Finished" : ""),
+          status: isFinishing ? "Completed" : "In Progress",
+          notes: notes.trim() || (isFinishing ? "Finished" : ""),
         };
       }
       return m;
