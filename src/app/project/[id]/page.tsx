@@ -3,8 +3,8 @@ import { MainLayout } from "@/components/main-layout";
 import { ProjectDetails } from "@/components/project-details";
 import { notFound } from "next/navigation";
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const project = getProjectById(params.id);
+export default async function ProjectPage({ params }: { params: { id: string } }) {
+  const project = await getProjectById(params.id);
 
   if (!project) {
     notFound();
