@@ -19,8 +19,25 @@ import {
   SidebarTrigger,
   SidebarRail,
   SidebarProvider,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+
+function HeaderContent() {
+  const { state } = useSidebar();
+  return (
+    <>
+      <SidebarTrigger />
+      {state === 'collapsed' && (
+        <Link href="/" className="flex items-center gap-2 animate-in fade-in-50">
+          <FolderKanban className="h-6 w-6 text-primary" />
+          <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+        </Link>
+      )}
+    </>
+  );
+}
+
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -40,7 +57,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                   <FolderKanban className="h-6 w-6 text-primary" />
                 </Link>
               </Button>
-              <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+              <h1 className="text-xl font-semibold text-foreground group-data-[[data-state=collapsed]]:hidden">MashrooBrika</h1>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -87,8 +104,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </Sidebar>
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">
-            <SidebarTrigger />
-            {/* Header content can go here if needed */}
+            <HeaderContent />
           </header>
           <main className="flex-1 overflow-auto p-4 sm:p-6">
             {children}
