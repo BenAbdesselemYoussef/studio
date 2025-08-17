@@ -79,7 +79,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
           break;
         default:
           body.classList.add("text-base");
-          break;
       }
 
       // Apply theme
