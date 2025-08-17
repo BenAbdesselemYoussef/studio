@@ -1,34 +1,12 @@
-
-"use client";
 import { getProjectById } from "@/lib/data";
 import { MainLayout } from "@/components/main-layout";
 import { ProjectDetails } from "@/components/project-details";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
 import type { Project } from "@/lib/data";
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const [project, setProject] = useState<Project | null>(null);
-  const id = params.id;
-
-  useEffect(() => {
-    if (id) {
-      getProjectById(id).then(setProject);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (project === null && id) {
-      getProjectById(id).then((proj) => {
-        if (!proj) {
-          // notFound() can't be called in useEffect, so handle appropriately
-          console.error("Project not found");
-        } else {
-          setProject(proj);
-        }
-      });
-    }
-  }, [id, project]);
+export default async function ProjectPage({ params }: { params: { id: string } }) {
+  const {id} = await params;
+  const project = await getProjectById(id)
   
   if (!project) {
     // This will be called on first render, and until the project is loaded.
