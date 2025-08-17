@@ -274,7 +274,7 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
                 value={editedMemberRole}
                 onChange={(e) => setEditedMemberRole(e.target.value)}
                 className="col-span-3"
-                autoFocus
+                autoFocus={true}
               />
             </div>
           </div>

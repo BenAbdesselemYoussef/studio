@@ -15,7 +15,7 @@ import {
   MoreVertical,
   Edit,
 } from "lucide-react";
-import { Project, Milestone, MilestoneStatus } from "@/lib/data";
+import { Project, Milestone, MilestoneStatus, Asset } from "@/lib/data";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
