@@ -55,7 +55,7 @@ export const projects: Project[] = [
     team: [allMembers[0], allMembers[1], allMembers[2], allMembers[3]],
     milestones: [
       { id: 'm1-1', title: 'Discovery & Research', status: 'Completed', progress: 100, notes: 'Finalized user personas and journey maps.' },
-      { id: 'm1-2', title: 'UI/UX Design Phase', status: 'In Progress', progress: 60 },
+      { id: 'm1-2', title: 'UI/UX Design Phase', status: 'In Progress', progress: 50 },
       { id: 'm1-3', title: 'Frontend Development', status: 'Not Started', progress: 0 },
       { id: 'm1-4', title: 'Backend Integration', status: 'Not Started', progress: 0 },
     ],
@@ -69,11 +69,11 @@ export const projects: Project[] = [
     id: 'proj-2',
     name: 'Orion Mobile App',
     description: 'New native mobile application for iOS and Android.',
-    progress: 40,
+    progress: 50,
     team: [allMembers[0], allMembers[4], allMembers[5]],
     milestones: [
         { id: 'm2-1', title: 'Initial Prototyping', status: 'Completed', progress: 100, notes: 'User testing of prototype was successful.' },
-        { id: 'm2-2', title: 'Core Feature Development', status: 'In Progress', progress: 30 },
+        { id: 'm2-2', title: 'Core Feature Development', status: 'In Progress', progress: 25 },
         { id: 'm2-3', title: 'Beta Testing', status: 'Not Started', progress: 0 },
     ],
     assets: [
@@ -85,12 +85,12 @@ export const projects: Project[] = [
     id: 'proj-3',
     name: 'Nova Analytics Dashboard',
     description: 'Internal dashboard for visualizing key business metrics.',
-    progress: 90,
+    progress: 100,
     team: [allMembers[1], allMembers[3], allMembers[4]],
     milestones: [
         { id: 'm3-1', title: 'Data Source Integration', status: 'Completed', progress: 100, notes: 'All data sources are connected and stable.' },
         { id: 'm3-2', title: 'Chart Component Library', status: 'Completed', progress: 100, notes: 'Built with Recharts for maximum flexibility.' },
-        { id: 'm3-3', title: 'User Role & Permissions', status: 'In Progress', progress: 70 },
+        { id: 'm3-3', title: 'User Role & Permissions', status: 'Completed', progress: 100 },
     ],
     assets: [
       { id: 'a3-1', name: 'Dashboard_Mockups.png', type: 'Image', url: 'https://placehold.co/600x400.png', uploadedAt: '2024-08-18', 'data-ai-hint': 'dashboard analytics' },

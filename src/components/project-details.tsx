@@ -15,7 +15,7 @@ import {
   MoreVertical,
   Edit,
 } from "lucide-react";
-import { Project, Milestone, Asset, MilestoneStatus } from "@/lib/data";
+import { Project, Milestone, MilestoneStatus } from "@/lib/data";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -211,7 +211,7 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
                           value={[progress]}
                           onValueChange={(value) => setProgress(value[0])}
                           max={100}
-                          step={5}
+                          step={25}
                         />
                       </div>
                       <div className="space-y-2">
