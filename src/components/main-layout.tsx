@@ -9,6 +9,7 @@ import {
   Settings,
   FolderKanban,
 } from "lucide-react";
+import React from "react";
 
 import {
   Sidebar,
@@ -69,7 +70,7 @@ function HeaderContent() {
           {state === 'collapsed' && (
             <Link href="/" className="flex items-center gap-2">
               <FolderKanban className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-semibold text-foreground">MashrooBrika</h1>
+              <h1 className="text-xl font-semibold text-foreground">Project Zenith</h1>
             </Link>
           )}
         </div>
@@ -87,6 +88,11 @@ function HeaderContent() {
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { settings } = useSettings();
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(settings.defaultNav === 'sidebar');
+
+  React.useEffect(() => {
+    setIsSidebarOpen(settings.defaultNav === 'sidebar');
+  }, [settings.defaultNav]);
   
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/" || pathname.startsWith("/project");
@@ -95,14 +101,14 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider defaultOpen={settings.defaultNav === 'sidebar'}>
+    <SidebarProvider open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
       <div className="flex min-h-screen w-full bg-background">
         <Sidebar>
           <SidebarHeader>
             <div className="flex items-center gap-2 overflow-hidden">
               <Link href="/" className="flex items-center gap-2">
                 <FolderKanban className="h-6 w-6 text-primary" />
-                <h1 className="text-xl font-semibold text-foreground whitespace-nowrap">MashrooBrika</h1>
+                <h1 className="text-xl font-semibold text-foreground whitespace-nowrap">Project Zenith</h1>
               </Link>
             </div>
           </SidebarHeader>
