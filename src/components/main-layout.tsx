@@ -77,9 +77,11 @@ function HeaderContent() {
       </div>
       <div className="flex items-center ml-auto gap-2">
         <div className={`transition-opacity duration-500 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
-          {state === 'collapsed' && <HeaderNav />}
+          <div className="flex items-center gap-2">
+            {state === 'collapsed' && <HeaderNav />}
+            <ThemeToggle />
+          </div>
         </div>
-        <ThemeToggle />
       </div>
     </>
   );
