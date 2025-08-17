@@ -162,6 +162,7 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
                   onChange={(e) => setNewMemberName(e.target.value)}
                   className="col-span-3"
                   placeholder="e.g. Alex Doe"
+                  autoFocus
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -191,7 +192,6 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
         {members.map((member) => (
           <Card key={member.id} className="text-center hover:shadow-lg transition-shadow duration-300 relative">
              <div className="absolute top-2 right-2">
-              <AlertDialog>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -203,33 +203,34 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
                       <Edit className="mr-2 h-4 w-4" />
                       <span>Edit</span>
                     </DropdownMenuItem>
-                    <AlertDialogTrigger asChild>
-                      <DropdownMenuItem
-                        onSelect={(e) => e.preventDefault()}
-                        className="text-destructive"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete</span>
-                      </DropdownMenuItem>
-                    </AlertDialogTrigger>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <DropdownMenuItem
+                          onSelect={(e) => e.preventDefault()}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Delete</span>
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently remove{" "}
+                            <strong>{member.name}</strong> from the team.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDeleteMember(member)} className="bg-destructive hover:bg-destructive/90">
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently remove{" "}
-                      <strong>{member.name}</strong> from the team.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDeleteMember(member)} className="bg-destructive hover:bg-destructive/90">
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
             </div>
             <CardContent className="p-6 flex flex-col items-center">
               <Avatar className="h-24 w-24 mx-auto mb-4">
@@ -273,6 +274,7 @@ export function TeamPage({ members: initialMembers }: TeamPageProps) {
                 value={editedMemberRole}
                 onChange={(e) => setEditedMemberRole(e.target.value)}
                 className="col-span-3"
+                autoFocus
               />
             </div>
           </div>
