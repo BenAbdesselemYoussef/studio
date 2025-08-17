@@ -12,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { themes } from "@/lib/themes";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function SettingsPage() {
   const { settings, setSettings } = useSettings();
@@ -27,44 +28,53 @@ export function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Theme</CardTitle>
+          <CardTitle>Appearance</CardTitle>
           <CardDescription>
-            Select a color theme for the entire application.
+            Customize the look and feel of the application.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {themes.map((theme) => (
-              <div key={theme.name} className="space-y-2">
-                <button
-                  onClick={() =>
-                    setSettings({ ...settings, theme: theme.name })
-                  }
-                  className={`w-full h-24 rounded-lg border-2 ${
-                    settings.theme === theme.name ? "border-primary" : "border-transparent"
-                  }`}
-                >
-                  <div className="h-full w-full rounded-md p-2 flex flex-col gap-1"
-                    style={{ backgroundColor: `hsl(${theme.cssVars.light.background})` }}
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label>Theme</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {themes.map((theme) => (
+                <div key={theme.name} className="space-y-2">
+                  <button
+                    onClick={() =>
+                      setSettings({ ...settings, theme: theme.name })
+                    }
+                    className={`w-full h-24 rounded-lg border-2 ${
+                      settings.theme === theme.name ? "border-primary" : "border-transparent"
+                    }`}
                   >
-                    <div className="flex items-center gap-1">
-                      <div className="h-4 w-4 rounded-full" style={{backgroundColor: `hsl(${theme.cssVars.light.primary})`}} />
-                      <div className="h-2 w-full rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.accent})`}} />
+                    <div className="h-full w-full rounded-md p-2 flex flex-col gap-1"
+                      style={{ backgroundColor: `hsl(${theme.cssVars.light.background})` }}
+                    >
+                      <div className="flex items-center gap-1">
+                        <div className="h-4 w-4 rounded-full" style={{backgroundColor: `hsl(${theme.cssVars.light.primary})`}} />
+                        <div className="h-2 w-full rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.accent})`}} />
+                      </div>
+                      <div className="h-2 w-1/2 rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.secondary})`}} />
+                      <div className="h-2 w-3/4 rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.muted})`}} />
                     </div>
-                    <div className="h-2 w-1/2 rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.secondary})`}} />
-                    <div className="h-2 w-3/4 rounded-sm" style={{backgroundColor: `hsl(${theme.cssVars.light.muted})`}} />
-                  </div>
-                </button>
-                <p className="text-sm text-center font-medium">{theme.label}</p>
-              </div>
-            ))}
+                  </button>
+                  <p className="text-sm text-center font-medium">{theme.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+           <div className="space-y-2">
+            <Label>Color Scheme</Label>
+            <div className="flex items-center space-x-2">
+              <ThemeToggle />
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Default Navigation</CardTitle>
+          <CardTitle>Layout</CardTitle>
           <CardDescription>
             Choose your preferred default navigation style.
           </CardDescription>

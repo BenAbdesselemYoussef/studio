@@ -20,9 +20,11 @@ import {
   SidebarTrigger,
   SidebarProvider,
   useSidebar,
+  SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useSettings } from "@/hooks/use-settings.tsx";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function HeaderNav() {
   const pathname = usePathname();
@@ -72,8 +74,11 @@ function HeaderContent() {
           )}
         </div>
       </div>
-      <div className={`ml-auto transition-opacity duration-500 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
-        {state === 'collapsed' && <HeaderNav />}
+      <div className="flex items-center ml-auto gap-2">
+        <div className={`transition-opacity duration-500 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
+          {state === 'collapsed' && <HeaderNav />}
+        </div>
+        <ThemeToggle />
       </div>
     </>
   );
@@ -141,6 +146,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
+          <SidebarFooter>
+            <ThemeToggle />
+          </SidebarFooter>
         </Sidebar>
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6">

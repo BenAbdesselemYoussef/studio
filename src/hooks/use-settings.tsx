@@ -7,6 +7,7 @@ import { themes } from "@/lib/themes";
 type Settings = {
   theme: string;
   defaultNav: "sidebar" | "header";
+  colorScheme: "light" | "dark" | "system";
 };
 
 type SettingsContextType = {
@@ -24,6 +25,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [settings, setSettings] = useState<Settings>({
     theme: "default",
     defaultNav: "sidebar",
+    colorScheme: "system",
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -43,12 +45,29 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (isMounted) {
       localStorage.setItem("app-settings", JSON.stringify(settings));
       
-      const selectedTheme = themes.find((t) => t.name === settings.theme) || themes[0];
-
       const root = window.document.documentElement;
+
+      // Apply color scheme
+      root.classList.remove("light", "dark");
+      if (settings.colorScheme === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        root.classList.add(systemTheme);
+      } else {
+        root.classList.add(settings.colorScheme);
+      }
+
+      // Apply theme
+      const selectedTheme = themes.find((t) => t.name === settings.theme) || themes[0];
       root.classList.remove(...themes.map((t) => t.name));
       root.classList.add(selectedTheme.name);
 
+      let styleSheet = document.getElementById("dynamic-theme-styles");
+      if (!styleSheet) {
+        styleSheet = document.createElement("style");
+        styleSheet.id = "dynamic-theme-styles";
+        document.head.appendChild(styleSheet);
+      }
+      
       const lightVars = Object.entries(selectedTheme.cssVars.light)
         .map(([key, value]) => `--${key}: ${value};`)
         .join("\n");
@@ -57,18 +76,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         .map(([key, value]) => `--${key}: ${value};`)
         .join("\n");
         
-      let styleSheet = document.getElementById("dynamic-theme-styles");
-      if (!styleSheet) {
-        styleSheet = document.createElement("style");
-        styleSheet.id = "dynamic-theme-styles";
-        document.head.appendChild(styleSheet);
-      }
-      
       styleSheet.innerHTML = `
-        .${selectedTheme.name} {
+        :root, .light {
           ${lightVars}
         }
-        .dark .${selectedTheme.name} {
+        .dark {
           ${darkVars}
         }
       `;
