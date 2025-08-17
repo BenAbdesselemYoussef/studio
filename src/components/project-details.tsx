@@ -14,6 +14,7 @@ import {
   ClipboardList,
   Paperclip,
   MoreVertical,
+  Edit,
 } from "lucide-react";
 import type { Project, Milestone, Asset, Member } from "@/lib/data";
 
@@ -112,18 +113,22 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                 Milestone Tracking
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               {activeMilestones.map((milestone) => (
-                <div key={milestone.id}>
-                  <div className="flex items-center justify-between mb-2">
+                <div key={milestone.id} className="border rounded-lg p-4 space-y-4">
+                  <div className="flex items-center justify-between">
                     <h3 className="font-semibold">{milestone.title}</h3>
                     <Badge variant={getStatusBadgeVariant(milestone.status)} className="bg-accent text-accent-foreground">
                       {milestone.status}
                     </Badge>
                   </div>
-                  <Progress value={milestone.progress} className="mb-2" />
-                  <div className="flex items-center justify-end text-sm text-muted-foreground">
-                    <span>{milestone.progress}%</span>
+                  <Progress value={milestone.progress} />
+                  <div className="flex items-center justify-end text-sm gap-4">
+                    <span className="text-muted-foreground font-medium">{milestone.progress}%</span>
+                    <Button variant="outline" size="sm">
+                      <Edit className="mr-2 h-3 w-3" />
+                      Update Progress
+                    </Button>
                   </div>
                 </div>
               ))}
