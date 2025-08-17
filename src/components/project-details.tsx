@@ -93,10 +93,6 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
           <p className="mt-1 text-muted-foreground">{project.description}</p>
           <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              <span>Due: {format(new Date(project.dueDate), "PPP")}</span>
-            </div>
-            <div className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               <span>{project.team.length} Members</span>
             </div>
@@ -126,8 +122,7 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                     </Badge>
                   </div>
                   <Progress value={milestone.progress} className="mb-2" />
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span>Due: {format(new Date(milestone.dueDate), "MMM d")}</span>
+                  <div className="flex items-center justify-end text-sm text-muted-foreground">
                     <span>{milestone.progress}%</span>
                   </div>
                 </div>
@@ -156,7 +151,6 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
                         {milestone.title}
                       </AccordionTrigger>
                       <AccordionContent className="text-muted-foreground space-y-2">
-                        <p><strong>Completed on:</strong> {format(new Date(milestone.dueDate), "PPP")}</p>
                         {milestone.notes ? (
                            <p><strong>Notes:</strong> {milestone.notes}</p>
                         ) : (
