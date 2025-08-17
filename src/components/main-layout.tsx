@@ -51,7 +51,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen w-full bg-background">
         <Sidebar collapsible="icon">
           <SidebarHeader>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-hidden">
               <Button variant="ghost" size="icon" asChild>
                 <Link href="/">
                   <FolderKanban className="h-6 w-6 text-primary" />
@@ -67,6 +67,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                   asChild
                   isActive={isActive("/")}
                   tooltip={{ children: "Dashboard" }}
+                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="/">
                     <LayoutGrid />
@@ -79,6 +80,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                   asChild
                   isActive={isActive("/team")}
                   tooltip={{ children: "Team" }}
+                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="/team">
                     <Users />
@@ -91,6 +93,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                   asChild
                   isActive={isActive("/settings")}
                   tooltip={{ children: "Settings" }}
+                  className="justify-center group-data-[[data-state=expanded]]:justify-start"
                 >
                   <Link href="#">
                     <Settings />
