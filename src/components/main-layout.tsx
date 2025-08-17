@@ -84,7 +84,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex min-h-screen w-full bg-background">
         <Sidebar>
           <SidebarHeader>
@@ -100,6 +100,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
+                  variant={isActive("/") ? "secondary" : "ghost"}
                   isActive={isActive("/")}
                 >
                   <Link href="/">
@@ -111,6 +112,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
+                  variant={isActive("/team") ? "secondary" : "ghost"}
                   isActive={isActive("/team")}
                 >
                   <Link href="/team">
@@ -122,6 +124,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
+                  variant={isActive("/settings") ? "secondary" : "ghost"}
                   isActive={isActive("/settings")}
                 >
                   <Link href="#">
