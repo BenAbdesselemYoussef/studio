@@ -12,10 +12,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { themes } from "@/lib/themes";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 
 export function SettingsPage() {
   const { settings, setSettings } = useSettings();
+
+  const setColorScheme = (scheme: "light" | "dark" | "system") => {
+    setSettings({ ...settings, colorScheme: scheme });
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in-50">
@@ -66,7 +70,24 @@ export function SettingsPage() {
            <div className="space-y-2">
             <Label>Color Scheme</Label>
             <div className="flex items-center space-x-2">
-              <ThemeToggle />
+               <Button
+                variant={settings.colorScheme === "light" ? "secondary" : "outline"}
+                onClick={() => setColorScheme("light")}
+              >
+                Light
+              </Button>
+              <Button
+                variant={settings.colorScheme === "dark" ? "secondary" : "outline"}
+                onClick={() => setColorScheme("dark")}
+              >
+                Dark
+              </Button>
+              <Button
+                variant={settings.colorScheme === "system" ? "secondary" : "outline"}
+                onClick={() => setColorScheme("system")}
+              >
+                System
+              </Button>
             </div>
           </div>
         </CardContent>
