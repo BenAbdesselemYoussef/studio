@@ -14,10 +14,12 @@ export type Asset = {
   'data-ai-hint'?: string;
 };
 
+export type MilestoneStatus = 'Completed' | 'In Progress' | 'Not Started';
+
 export type Milestone = {
   id: string;
   title: string;
-  status: 'Completed' | 'In Progress' | 'Not Started';
+  status: MilestoneStatus;
   progress: number;
   notes?: string;
 };

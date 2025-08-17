@@ -15,7 +15,7 @@ import {
   MoreVertical,
   Edit,
 } from "lucide-react";
-import { Project, Milestone, Asset } from "@/lib/data";
+import { Project, Milestone, Asset, MilestoneStatus } from "@/lib/data";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -70,8 +70,8 @@ const getStatusBadgeVariant = (status: Milestone["status"]) => {
   }
 };
 
-const getAssetIcon = (type: Asset["type"]) => {
-  switch (type) {
+const getAssetIcon = (assetType: Asset["type"]) => {
+  switch (assetType) {
     case "Image":
       return <ImageIcon className="h-5 w-5 text-muted-foreground" />;
     case "Document":
@@ -84,7 +84,7 @@ const getAssetIcon = (type: Asset["type"]) => {
 };
 
 export function ProjectDetails({ project: initialProject }: ProjectDetailsProps) {
-  const [project, setProject] = useState(initialProject);
+  const [project, setProject] = useState<Project>(initialProject);
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
   const [progress, setProgress] = useState(0);
   const [notes, setNotes] = useState("");
@@ -112,17 +112,18 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
 
     const updatedMilestones = project.milestones.map((m) => {
       if (m.id === selectedMilestone.id) {
+        const mileStoneStatus: MilestoneStatus = isFinishing ? 'Completed' : 'In Progress'; 
         return {
           ...m,
           progress: finalProgress,
-          status: isFinishing ? "Completed" : "In Progress",
-          notes: notes.trim() || (isFinishing ? "Finished" : m.notes),
+          status: mileStoneStatus,
+          notes: notes.trim() || (isFinishing ? 'Finished' : m.notes),
         };
       }
       return m;
     });
     
-    const updatedProject = { ...project, milestones: updatedMilestones };
+    const updatedProject: Project = { ...project, milestones: updatedMilestones };
     const overallProgress = Math.round(updatedMilestones.reduce((acc, m) => acc + m.progress, 0) / updatedMilestones.length);
     updatedProject.progress = overallProgress;
 
@@ -224,8 +225,8 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
                       </div>
                     </div>
                     <DialogFooter>
-                       <DialogClose asChild>
-                        <Button variant="outline" data-dialog-close-${milestone.id}>Cancel</Button>
+                      <DialogClose asChild>
+                        <Button variant="outline" data-dialog-close={`${selectedMilestone?.id}`}>Cancel</Button>
                       </DialogClose>
                       <Button onClick={() => handleUpdate(true)} variant="destructive">
                         Finish Milestone
