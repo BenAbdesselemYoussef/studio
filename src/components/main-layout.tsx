@@ -23,7 +23,10 @@ import { Button } from "@/components/ui/button";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isActive = (path: string) => pathname === path || (path === "/" ? pathname.startsWith("/project") : false);
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/" || pathname.startsWith("/project");
+    return pathname.startsWith(path);
+  }
 
   return (
     <div className="flex min-h-screen w-full bg-background">
@@ -58,7 +61,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 isActive={isActive("/team")}
                 tooltip={{ children: "Team" }}
               >
-                <Link href="#">
+                <Link href="/team">
                   <Users />
                   <span>Team</span>
                 </Link>
