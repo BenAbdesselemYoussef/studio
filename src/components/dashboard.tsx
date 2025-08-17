@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -61,7 +60,7 @@ export function Dashboard({ projects }: DashboardProps) {
                       <TooltipTrigger asChild>
                         <Avatar className="border-2 border-card">
                           <AvatarImage src={member.avatarUrl} alt={member.name} />
-                          <AvatarFallback>{member.name.charAt(0)}</Fallback>
+                          <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </TooltipTrigger>
                       <TooltipContent>{member.name}</TooltipContent>
