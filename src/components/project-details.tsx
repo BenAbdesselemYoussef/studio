@@ -176,7 +176,7 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
             </CardHeader>
             <CardContent className="space-y-4">
               {activeMilestones.map((milestone) => (
-                <Dialog key={milestone.id}>
+                <Dialog key={milestone.id} onOpenChange={(open) => { if (!open) setSelectedMilestone(null); }}>
                   <div className="border rounded-lg p-4 space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold">{milestone.title}</h3>
