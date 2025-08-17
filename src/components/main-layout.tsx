@@ -59,7 +59,7 @@ function HeaderContent() {
   return (
     <>
       <SidebarTrigger />
-      <div className={`transition-opacity duration-300 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`transition-opacity duration-500 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
         <div className="flex items-center gap-2">
           {state === 'collapsed' && (
             <Link href="/" className="flex items-center gap-2">
@@ -69,7 +69,7 @@ function HeaderContent() {
           )}
         </div>
       </div>
-      <div className={`ml-auto transition-opacity duration-300 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`ml-auto transition-opacity duration-500 ${state === 'collapsed' ? 'opacity-100' : 'opacity-0'}`}>
         {state === 'collapsed' && <HeaderNav />}
       </div>
     </>
