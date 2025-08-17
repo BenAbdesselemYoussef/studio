@@ -20,6 +20,10 @@ export function SettingsPage() {
   const setColorScheme = (scheme: "light" | "dark" | "system") => {
     setSettings({ ...settings, colorScheme: scheme });
   };
+  
+  const setFontSize = (size: "sm" | "md" | "lg") => {
+    setSettings({ ...settings, fontSize: size });
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in-50">
@@ -87,6 +91,29 @@ export function SettingsPage() {
                 onClick={() => setColorScheme("system")}
               >
                 System
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Font Size</Label>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant={settings.fontSize === "sm" ? "secondary" : "outline"}
+                onClick={() => setFontSize("sm")}
+              >
+                Small
+              </Button>
+              <Button
+                variant={settings.fontSize === "md" ? "secondary" : "outline"}
+                onClick={() => setFontSize("md")}
+              >
+                Medium
+              </Button>
+              <Button
+                variant={settings.fontSize === "lg" ? "secondary" : "outline"}
+                onClick={() => setFontSize("lg")}
+              >
+                Large
               </Button>
             </div>
           </div>

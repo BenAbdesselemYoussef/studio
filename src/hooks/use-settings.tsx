@@ -8,6 +8,7 @@ type Settings = {
   theme: string;
   defaultNav: "sidebar" | "header";
   colorScheme: "light" | "dark" | "system";
+  fontSize: "sm" | "md" | "lg";
 };
 
 type SettingsContextType = {
@@ -26,6 +27,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     theme: "default",
     defaultNav: "sidebar",
     colorScheme: "system",
+    fontSize: "md",
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -33,7 +35,16 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     const storedSettings = localStorage.getItem("app-settings");
     if (storedSettings) {
       try {
-        setSettings(JSON.parse(storedSettings));
+        const parsedSettings = JSON.parse(storedSettings);
+        setSettings({
+            ...{
+                theme: "default",
+                defaultNav: "sidebar",
+                colorScheme: "system",
+                fontSize: "md",
+            },
+            ...parsedSettings
+        });
       } catch (e) {
         console.error("Failed to parse settings from localStorage", e);
       }
@@ -46,6 +57,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("app-settings", JSON.stringify(settings));
       
       const root = window.document.documentElement;
+      const body = window.document.body;
 
       // Apply color scheme
       root.classList.remove("light", "dark");
@@ -54,6 +66,20 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         root.classList.add(systemTheme);
       } else {
         root.classList.add(settings.colorScheme);
+      }
+      
+      // Apply font size
+      body.classList.remove("text-sm", "text-base", "text-lg");
+      switch (settings.fontSize) {
+        case "sm":
+          body.classList.add("text-sm");
+          break;
+        case "lg":
+          body.classList.add("text-lg");
+          break;
+        default:
+          body.classList.add("text-base");
+          break;
       }
 
       // Apply theme
