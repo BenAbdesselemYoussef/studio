@@ -10,13 +10,14 @@ import {
   Link2,
   PlusCircle,
   Users,
-  Calendar,
   ClipboardList,
   Paperclip,
   MoreVertical,
   Edit,
 } from "lucide-react";
-import type { Project, Milestone, Asset, Member } from "@/lib/data";
+import type { Project, Milestone, Asset } from "@/lib/data";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 import {
   Accordion,
@@ -30,7 +31,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -39,16 +39,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -62,8 +54,6 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 
 interface ProjectDetailsProps {
   project: Project;
@@ -105,7 +95,7 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
     setProgress(milestone.progress);
     setNotes(milestone.notes || "");
   };
-
+  
   const handleUpdate = (finish: boolean) => {
     if (!selectedMilestone) return;
 
@@ -126,21 +116,28 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
           ...m,
           progress: finalProgress,
           status: finish ? "Completed" : "In Progress",
-          notes: notes || (finish ? "" : "nothing to note"),
+          notes: notes.trim() || (finish ? "Finished" : ""),
         };
       }
       return m;
     });
+    
+    const updatedProject = { ...project, milestones: updatedMilestones };
+    const overallProgress = Math.round(updatedMilestones.reduce((acc, m) => acc + m.progress, 0) / updatedMilestones.length);
+    updatedProject.progress = overallProgress;
 
-    setProject({ ...project, milestones: updatedMilestones });
+    setProject(updatedProject);
     
     toast({
       title: "Milestone Updated",
       description: `"${selectedMilestone.title}" has been updated.`,
     });
     
-    // Close dialog by resetting state
-    setSelectedMilestone(null);
+    // Find the button for the dialog and click it to close
+    const closeButton = document.querySelector(`[data-dialog-close-${selectedMilestone.id}]`);
+    if (closeButton instanceof HTMLElement) {
+      closeButton.click();
+    }
   };
 
   const activeMilestones = project.milestones.filter(
@@ -151,7 +148,6 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
   );
 
   return (
-    <Dialog onOpenChange={() => setSelectedMilestone(null)}>
       <div className="space-y-8 animate-in fade-in-50">
         <div className="flex items-start justify-between">
           <div>
@@ -180,24 +176,64 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
               </CardHeader>
               <CardContent className="space-y-4">
                 {activeMilestones.map((milestone) => (
-                  <div key={milestone.id} className="border rounded-lg p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold">{milestone.title}</h3>
-                      <Badge variant={getStatusBadgeVariant(milestone.status)} className="bg-accent text-accent-foreground">
-                        {milestone.status}
-                      </Badge>
+                  <Dialog key={milestone.id}>
+                    <div className="border rounded-lg p-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold">{milestone.title}</h3>
+                        <Badge variant={getStatusBadgeVariant(milestone.status)} className="bg-accent text-accent-foreground">
+                          {milestone.status}
+                        </Badge>
+                      </div>
+                      <Progress value={milestone.progress} />
+                      <div className="flex items-center justify-end text-sm gap-4">
+                        <span className="text-muted-foreground font-medium">{milestone.progress}%</span>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" onClick={() => handleOpenDialog(milestone)}>
+                            <Edit className="mr-2 h-3 w-3" />
+                            Update Progress
+                          </Button>
+                        </DialogTrigger>
+                      </div>
                     </div>
-                    <Progress value={milestone.progress} />
-                    <div className="flex items-center justify-end text-sm gap-4">
-                      <span className="text-muted-foreground font-medium">{milestone.progress}%</span>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" onClick={() => handleOpenDialog(milestone)}>
-                          <Edit className="mr-2 h-3 w-3" />
-                          Update Progress
+                     <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Update: {selectedMilestone?.title}</DialogTitle>
+                        <DialogDescription>
+                          Adjust the progress and add notes for this milestone.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="progress">Progress: {progress}%</Label>
+                          <Slider
+                            id="progress"
+                            value={[progress]}
+                            onValueChange={(value) => setProgress(value[0])}
+                            max={100}
+                            step={5}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="notes">Notes</Label>
+                          <Textarea
+                            id="notes"
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="Add any relevant notes here..."
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                         <DialogClose asChild>
+                          <Button variant="outline" data-dialog-close-${milestone.id}>Cancel</Button>
+                        </DialogClose>
+                        <Button onClick={() => handleUpdate(true)} variant="destructive">
+                          Finish Milestone
                         </Button>
-                      </DialogTrigger>
-                    </div>
-                  </div>
+                        <Button onClick={() => handleUpdate(false)}>Update</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 ))}
                 {activeMilestones.length === 0 && (
                   <p className="text-muted-foreground text-center py-4">
@@ -304,46 +340,5 @@ export function ProjectDetails({ project: initialProject }: ProjectDetailsProps)
           </div>
         </div>
       </div>
-      {selectedMilestone && (
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update: {selectedMilestone.title}</DialogTitle>
-            <DialogDescription>
-              Adjust the progress and add notes for this milestone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="progress">Progress: {progress}%</Label>
-              <Slider
-                id="progress"
-                value={[progress]}
-                onValueChange={(value) => setProgress(value[0])}
-                max={100}
-                step={5}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="notes">Notes</Label>
-              <Textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add any relevant notes here..."
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button onClick={() => handleUpdate(true)} variant="destructive">
-              Finish Milestone
-            </Button>
-            <Button onClick={() => handleUpdate(false)}>Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      )}
-    </Dialog>
   );
 }
